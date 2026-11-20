@@ -22,7 +22,7 @@ const sobre = [
   },
 ]
 
-function Home({ mudarPagina }) {
+function HomePage({ mudarPagina }) {
   return (
     <>
       <section className="container">
@@ -61,4 +61,4 @@ function Home({ mudarPagina }) {
   )
 }
 
-export default Home
+export default HomePage

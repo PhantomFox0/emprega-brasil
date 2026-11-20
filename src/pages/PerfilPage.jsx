@@ -1,4 +1,4 @@
-function Perfil() {
+function PerfilPage() {
   return (
     <section className="container">
       <h1 className="titulo">Perfil</h1>
@@ -6,4 +6,4 @@ function Perfil() {
   )
 }
 
-export default Perfil
+export default PerfilPage
