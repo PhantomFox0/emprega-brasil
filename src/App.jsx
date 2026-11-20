@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { Outlet } from "react-router-dom"
+import NavBar from "./components/NavBar"
 
 function App() {
 
   return (
     <>
-      <h1> Hello, World! </h1>
+      <NavBar />
+      <h1> React Router </h1>
+      <Outlet />
+      <p>Footer</p>
     </>
   )
 }
