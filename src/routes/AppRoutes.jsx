@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import PrincipalPage from "../pages/Principal/PrincipalPage";
-import PerfilPage from "../pages/Perfil/PerfilPage";
-import CurriculosPage from "../pages/Curriculos/CurriculosPage";
-import VagasPage from "../pages/Vagas/VagasPage";
-import ErrorPage from "../pages/Error/ErrorPage";
+import PrincipalPage from "../pages/PrincipalPage";
+import PerfilPage from "../pages/PerfilPage";
+import CurriculosPage from "../pages/CurriculosPage";
+import VagasPage from "../pages/VagasPage";
+import ErrorPage from "../pages/ErrorPage";
 
 function RootLayout() {
   return (
