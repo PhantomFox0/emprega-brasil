@@ -1,3 +1,19 @@
+# Dependências (frontend e backend)
+node_modules
+backend/node_modules
+
+# Build de produção do Vite
+dist
+dist-ssr
+
+# Variáveis de ambiente e segredos (NUNCA commitar)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
 # Logs
 logs
 *.log

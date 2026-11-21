@@ -267,61 +267,58 @@ main {
   height: fit-content;
 }
 
-/* Celular e telas pequenas */
-@media (max-width: 900px) {
-  main {
-    padding-top: 150px;
-  }
+/* Página de Vagas */
+.vagas-titulo {
+  text-align: center;
+  margin-bottom: 32px;
+}
 
-  .curriculo {
-    padding-top: 16px;
-  }
+.vagas-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
 
-  .container {
-    padding: 0 16px;
-  }
+.vagas-destaque {
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
 
-  .titulo {
-    font-size: 40px;
-  }
+.vagas-texto {
+  line-height: 1.5;
+}
 
-  .header {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px;
-  }
+.vagas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
-  .menu {
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.vaga-card {
+  background-color: #b5c493;
+  padding: 24px 28px;
+  border-radius: 4px;
+}
 
-  .menu button {
-    font-size: 18px;
-  }
+.vaga-card-titulo {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
 
-  .sobre-lista,
-  .curriculo-conteudo,
-  .secoes,
-  .footer-topo {
-    display: flex;
-    flex-direction: column;
-  }
+.vaga-card-desc {
+  margin: 0 0 18px;
+  line-height: 1.45;
+}
 
-  .secoes {
-    padding: 32px 16px;
-  }
-
-  .secoes-foto,
-  .curriculo-foto {
-    width: 100%;
-    height: auto;
-  }
-
-  .footer-links {
-    margin: 24px 0 0;
-  }
+.vaga-card-botao {
+  display: inline-block;
+  background-color: #1a2414;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 /* Página de Erro */
@@ -384,8 +381,63 @@ main {
   background-color: var(--cinza-claro);
 }
 
+/* Celular e telas pequenas */
 @media (max-width: 900px) {
-  .erro-pagina {
+  main {
+    padding-top: 150px;
+  }
+
+  .curriculo {
+    padding-top: 16px;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .titulo {
+    font-size: 40px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .menu {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .menu button {
+    font-size: 18px;
+  }
+
+  .sobre-lista,
+  .curriculo-conteudo,
+  .secoes,
+  .footer-topo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .secoes {
+    padding: 32px 16px;
+  }
+
+  .secoes-foto,
+  .curriculo-foto {
+    width: 100%;
+    height: auto;
+  }
+
+  .footer-links {
+    margin: 24px 0 0;
+  }
+
+    .erro-pagina {
     min-height: auto;
     padding-top: 48px;
     padding-bottom: 24px;
