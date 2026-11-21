@@ -1,4 +1,6 @@
-/* Cores do projeto (tiradas do Figma) */
+/* ==========================================================================
+   Variáveis e estilos base
+   ========================================================================== */
 :root {
   --verde-escuro: #121f0d;
   --verde-cinza: #596256;
@@ -6,7 +8,6 @@
   --cinza-texto: #828282;
 }
 
-/* Coisas que se repetem */
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -31,7 +32,9 @@
   color: #333;
 }
 
-/* Logo */
+/* ==========================================================================
+   Logo
+   ========================================================================== */
 .logo {
   display: flex;
   flex-direction: column;
@@ -54,7 +57,9 @@
   width: 40px;
 }
 
-/* Cabeçalho */
+/* ==========================================================================
+   Header
+   ========================================================================== */
 .header {
   position: fixed;
   top: 0;
@@ -97,64 +102,9 @@
   text-decoration: underline;
 }
 
-/* Rodapé */
-.footer {
-  background-color: var(--cinza-claro);
-  margin-top: 120px;
-}
-
-.footer-topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 32px 28px;
-  border-bottom: 1px solid #aaa;
-}
-
-.footer .logo {
-  color: #9e9e9e;
-  text-decoration: none;
-}
-
-.footer .logo span:first-child {
-  font-size: 36px;
-}
-
-.footer .logo span:last-child {
-  font-size: 30px;
-}
-
-.footer .logo img {
-  width: 64px;
-}
-
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-right: 180px;
-}
-
-.footer-links a {
-  text-decoration: none;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #333;
-  text-align: left;
-}
-
-.footer-links button:hover {
-  text-decoration: underline;
-}
-
-.footer-copy {
-  padding: 20px 16px;
-  font-size: 18px;
-  color: #333;
-}
-
-/* Página Inicial */
+/* ==========================================================================
+   Página Inicial
+   ========================================================================== */
 main {
   padding-top: 112px;
 }
@@ -228,9 +178,9 @@ main {
   filter: brightness(0.6); /* deixa a foto mais escura, igual no Figma */
 }
 
-/* Página Currículo */
-
-
+/* ==========================================================================
+   Página Currículo
+   ========================================================================== */
 .curriculo-subtitulo {
   max-width: 760px;
 }
@@ -267,7 +217,9 @@ main {
   height: fit-content;
 }
 
-/* Página de Vagas */
+/* ==========================================================================
+   Página Vagas
+   ========================================================================== */
 .vagas-titulo {
   text-align: center;
   margin-bottom: 32px;
@@ -321,7 +273,9 @@ main {
   font-size: 0.9rem;
 }
 
-/* Página de Erro */
+/* ==========================================================================
+   Página Erro
+   ========================================================================== */
 .erro-pagina {
   min-height: 55vh;
   display: flex;
@@ -381,14 +335,72 @@ main {
   background-color: var(--cinza-claro);
 }
 
-/* Celular e telas pequenas */
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+  background-color: var(--cinza-claro);
+  margin-top: 120px;
+}
+
+.footer-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 28px;
+  border-bottom: 1px solid #aaa;
+}
+
+.footer .logo {
+  color: #9e9e9e;
+  text-decoration: none;
+}
+
+.footer .logo span:first-child {
+  font-size: 36px;
+}
+
+.footer .logo span:last-child {
+  font-size: 30px;
+}
+
+.footer .logo img {
+  width: 64px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 180px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #333;
+  text-align: left;
+}
+
+.footer-links button:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  padding: 20px 16px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* ==========================================================================
+   Celular e telas pequenas
+   ========================================================================== */
 @media (max-width: 900px) {
+  /* Geral e estrutura base */
   main {
     padding-top: 150px;
-  }
-
-  .curriculo {
-    padding-top: 16px;
   }
 
   .container {
@@ -399,6 +411,7 @@ main {
     font-size: 40px;
   }
 
+  /* Header - Celular */
   .header {
     flex-direction: column;
     gap: 12px;
@@ -415,10 +428,9 @@ main {
     font-size: 18px;
   }
 
+  /* Página Inicial - Celular */
   .sobre-lista,
-  .curriculo-conteudo,
-  .secoes,
-  .footer-topo {
+  .secoes {
     display: flex;
     flex-direction: column;
   }
@@ -427,17 +439,44 @@ main {
     padding: 32px 16px;
   }
 
-  .secoes-foto,
+  .secoes-foto {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Página Currículo - Celular */
+  .curriculo {
+    padding-top: 16px;
+  }
+
+  .curriculo-conteudo {
+    display: flex;
+    flex-direction: column;
+  }
+
   .curriculo-foto {
     width: 100%;
     height: auto;
   }
 
-  .footer-links {
-    margin: 24px 0 0;
+  /* Página Vagas - Celular */
+  .vagas-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
-    .erro-pagina {
+  .vaga-card {
+    padding: 20px;
+  }
+
+  .vaga-card-botao {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Página Error - Celular */
+  .erro-pagina {
     min-height: auto;
     padding-top: 48px;
     padding-bottom: 24px;
@@ -452,5 +491,15 @@ main {
   .erro-btn-secundario {
     text-align: center;
     width: 100%;
+  }
+
+  /* Footer - Celular */
+  .footer-topo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-links {
+    margin: 24px 0 0;
   }
 }
