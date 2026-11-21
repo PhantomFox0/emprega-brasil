@@ -1,4 +1,4 @@
-function ErrorPage() {
+function Error() {
 
   return (
     <>
@@ -7,4 +7,4 @@ function ErrorPage() {
   )
 }
 
-export default ErrorPage
+export default Error

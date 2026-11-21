@@ -2,10 +2,10 @@ import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import HomePage from './pages/HomePage'
-import CurriculoPage from './pages/CurriculoPage'
-import VagasPage from './pages/VagasPage'
-import PerfilPage from './pages/PerfilPage'
+import Home from './pages/Home'
+import Curriculo from './pages/Curriculo'
+import Vagas from './pages/Vagas'
+import Perfil from './pages/Perfil'
 
 function App() {
   // Guarda qual página está aberta agora
@@ -21,10 +21,10 @@ function App() {
       <Header mudarPagina={mudarPagina} />
 
       <main>
-        {pagina === 'inicio' && <HomePage mudarPagina={mudarPagina} />}
-        {pagina === 'curriculo' && <CurriculoPage />}
-        {pagina === 'vagas' && <VagasPage />}
-        {pagina === 'perfil' && <PerfilPage />}
+        {pagina === 'inicio' && <Home mudarPagina={mudarPagina} />}
+        {pagina === 'curriculo' && <Curriculo />}
+        {pagina === 'vagas' && <Vagas />}
+        {pagina === 'perfil' && <Perfil />}
       </main>
 
       <Footer mudarPagina={mudarPagina} />
