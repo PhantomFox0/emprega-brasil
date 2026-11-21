@@ -134,7 +134,7 @@ app.post("/api/dicas", async (req, res) => {
 });
 
 // ================= PLATAFORMAS =================
-// Usa crase/backticks em `plat_endereço` por causa do caractere acentuado
+// Usa crase/backticks em `plat_endereco` por causa do caractere acentuado
 app.get("/api/plataformas", async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -149,24 +149,24 @@ app.get("/api/plataformas", async (req, res) => {
 
 app.post("/api/plataformas", async (req, res) => {
   const { plat_nome, plat_desc } = req.body;
-  const platEndereco = req.body["plat_endereço"] ?? req.body.plat_endereco;
+  const platEndereco = req.body["plat_endereco"] ?? req.body.plat_endereco;
 
   if (!plat_nome || !platEndereco) {
     return res.status(400).json({
-      erro: "Campos obrigatórios: plat_nome e plat_endereço.",
+      erro: "Campos obrigatórios: plat_nome e plat_endereco.",
     });
   }
 
   try {
     const [result] = await pool.execute(
-      "INSERT INTO plataformas (plat_nome, `plat_endereço`, plat_desc) VALUES (?, ?, ?)",
+      "INSERT INTO plataformas (plat_nome, `plat_endereco`, plat_desc) VALUES (?, ?, ?)",
       [plat_nome.trim(), String(platEndereco).trim(), plat_desc?.trim() || null]
     );
 
     res.status(201).json({
       plat_id: result.insertId,
       plat_nome: plat_nome.trim(),
-      "plat_endereço": String(platEndereco).trim(),
+      "plat_endereco": String(platEndereco).trim(),
       plat_desc: plat_desc?.trim() || null,
     });
   } catch (error) {
