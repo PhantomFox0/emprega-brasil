@@ -138,7 +138,7 @@ app.post("/api/dicas", async (req, res) => {
 app.get("/api/plataformas", async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT plat_id, plat_nome, `plat_endereço`, plat_desc FROM plataformas ORDER BY plat_id ASC"
+      "SELECT plat_id, plat_nome, `plat_endereco`, plat_desc FROM plataformas ORDER BY plat_id ASC"
     );
     res.json(rows);
   } catch (error) {
