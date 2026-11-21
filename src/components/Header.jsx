@@ -1,21 +1,40 @@
-import Logo from './Logo'
+import { useEffect, useRef, useState } from 'react';
+import Logo from './Logo';
+import NavBar from './NavBar';
 
-// Cabeçalho com o menu. 
-//Recebe a função "mudarPagina" do App.
 
-function Header({ mudarPagina }) {
+function Header() {
+  const [visivel, setVisivel] = useState(true);
+  const ultimoScrollY = useRef(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      const atualScrollY = window.scrollY;
+      const diferenca = atualScrollY - ultimoScrollY.current;
+
+      if (Math.abs(diferenca) < 8) return;
+
+      if (atualScrollY <- 50) {
+        setVisivel(true);
+      } else if (diferenca > 0) {
+        setVisivel(false);
+      } else {
+        setVisivel(true);
+      }
+
+      ultimoScrollY.current = atualScrollY;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="header">
+    <header className={`header ${visivel ? "" : "header--escondido"}`}>
       <Logo />
-      {/* Links do header para as páginas */}
-      <nav className="menu">
-        <button onClick={() => mudarPagina('inicio')}>Página Inicial</button>
-        <button onClick={() => mudarPagina('curriculo')}>Currículo</button>
-        <button onClick={() => mudarPagina('vagas')}>Vagas</button>
-        <button onClick={() => mudarPagina('perfil')}>Perfil</button>
-      </nav>
+      <NavBar className="menu" />
     </header>
   )
 }
 
-export default Header
+export default Header;

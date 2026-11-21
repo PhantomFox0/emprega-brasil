@@ -1,4 +1,6 @@
-/* Cores do projeto (tiradas do Figma) */
+/* ==========================================================================
+   Variáveis e estilos base
+   ========================================================================== */
 :root {
   --verde-escuro: #121f0d;
   --verde-cinza: #596256;
@@ -6,7 +8,6 @@
   --cinza-texto: #828282;
 }
 
-/* Coisas que se repetem */
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -31,7 +32,9 @@
   color: #333;
 }
 
-/* Logo */
+/* ==========================================================================
+   Logo
+   ========================================================================== */
 .logo {
   display: flex;
   flex-direction: column;
@@ -54,14 +57,32 @@
   width: 40px;
 }
 
-/* Cabeçalho */
+/* ==========================================================================
+   Header
+   ========================================================================== */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
   background-color: var(--verde-escuro);
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 64px 16px 28px;
+  transform: translateY(0);
+  transition: transform 0.25s ease;
+}
+
+.header--escondido {
+  transform: translateY(-100%);
+}
+
+.header .logo {
+  color: #fff;
+  text-decoration: none;
 }
 
 .menu {
@@ -69,7 +90,8 @@
   gap: 40px;
 }
 
-.menu button {
+.menu a {
+  text-decoration: none;
   background: none;
   border: none;
   color: #fff;
@@ -80,64 +102,11 @@
   text-decoration: underline;
 }
 
-/* Rodapé */
-.footer {
-  background-color: var(--cinza-claro);
-  margin-top: 120px;
-}
-
-.footer-topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 32px 28px;
-  border-bottom: 1px solid #aaa;
-}
-
-.footer .logo {
-  color: #9e9e9e;
-}
-
-.footer .logo span:first-child {
-  font-size: 36px;
-}
-
-.footer .logo span:last-child {
-  font-size: 30px;
-}
-
-.footer .logo img {
-  width: 64px;
-}
-
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-right: 180px;
-}
-
-.footer-links button {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #333;
-  text-align: left;
-}
-
-.footer-links button:hover {
-  text-decoration: underline;
-}
-
-.footer-copy {
-  padding: 20px 16px;
-  font-size: 18px;
-  color: #333;
-}
-
-/* Página Inicial */
-main > .container:first-child {
-  padding-top: 120px;
+/* ==========================================================================
+   Página Inicial
+   ========================================================================== */
+main {
+  padding-top: 112px;
 }
 
 .foto-grande {
@@ -209,11 +178,9 @@ main > .container:first-child {
   filter: brightness(0.6); /* deixa a foto mais escura, igual no Figma */
 }
 
-/* Página Currículo */
-.curriculo {
-  padding-top: 110px;
-}
-
+/* ==========================================================================
+   Página Currículo
+   ========================================================================== */
 .curriculo-subtitulo {
   max-width: 760px;
 }
@@ -250,8 +217,192 @@ main > .container:first-child {
   height: fit-content;
 }
 
-/* Celular e telas pequenas */
+/* ==========================================================================
+   Página Vagas
+   ========================================================================== */
+.vagas-titulo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.vagas-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.vagas-destaque {
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.vagas-texto {
+  line-height: 1.5;
+}
+
+.vagas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.vaga-card {
+  background-color: #b5c493;
+  padding: 24px 28px;
+  border-radius: 4px;
+}
+
+.vaga-card-titulo {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.vaga-card-desc {
+  margin: 0 0 18px;
+  line-height: 1.45;
+}
+
+.vaga-card-botao {
+  display: inline-block;
+  background-color: #1a2414;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Página Erro
+   ========================================================================== */
+.erro-pagina {
+  min-height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-bottom: 48px;
+}
+
+.erro-codigo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--verde-cinza);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.erro-descricao {
+  max-width: 680px;
+  color: var(--cinza-texto);
+}
+
+.erro-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.erro-btn-primario {
+  text-decoration: none;
+  background-color: var(--verde-escuro);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 6px;
+}
+
+.erro-btn-primario:hover {
+  background-color: var(--verde-cinza);
+}
+
+.erro-btn-secundario {
+  text-decoration: none;
+  background-color: transparent;
+  color: var(--verde-escuro);
+  border: 2px solid var(--verde-escuro);
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 6px;
+}
+
+.erro-btn-secundario:hover {
+  background-color: var(--cinza-claro);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+  background-color: var(--cinza-claro);
+  margin-top: 120px;
+}
+
+.footer-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 28px;
+  border-bottom: 1px solid #aaa;
+}
+
+.footer .logo {
+  color: #9e9e9e;
+  text-decoration: none;
+}
+
+.footer .logo span:first-child {
+  font-size: 36px;
+}
+
+.footer .logo span:last-child {
+  font-size: 30px;
+}
+
+.footer .logo img {
+  width: 64px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 180px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #333;
+  text-align: left;
+}
+
+.footer-links button:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  padding: 20px 16px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* ==========================================================================
+   Celular e telas pequenas
+   ========================================================================== */
 @media (max-width: 900px) {
+  /* Geral e estrutura base */
+  main {
+    padding-top: 150px;
+  }
+
   .container {
     padding: 0 16px;
   }
@@ -260,6 +411,7 @@ main > .container:first-child {
     font-size: 40px;
   }
 
+  /* Header - Celular */
   .header {
     flex-direction: column;
     gap: 12px;
@@ -276,10 +428,9 @@ main > .container:first-child {
     font-size: 18px;
   }
 
+  /* Página Inicial - Celular */
   .sobre-lista,
-  .curriculo-conteudo,
-  .secoes,
-  .footer-topo {
+  .secoes {
     display: flex;
     flex-direction: column;
   }
@@ -288,10 +439,64 @@ main > .container:first-child {
     padding: 32px 16px;
   }
 
-  .secoes-foto,
+  .secoes-foto {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Página Currículo - Celular */
+  .curriculo {
+    padding-top: 16px;
+  }
+
+  .curriculo-conteudo {
+    display: flex;
+    flex-direction: column;
+  }
+
   .curriculo-foto {
     width: 100%;
     height: auto;
+  }
+
+  /* Página Vagas - Celular */
+  .vagas-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .vaga-card {
+    padding: 20px;
+  }
+
+  .vaga-card-botao {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Página Error - Celular */
+  .erro-pagina {
+    min-height: auto;
+    padding-top: 48px;
+    padding-bottom: 24px;
+  }
+
+  .erro-acoes {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .erro-btn-primario,
+  .erro-btn-secundario {
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Footer - Celular */
+  .footer-topo {
+    display: flex;
+    flex-direction: column;
   }
 
   .footer-links {
