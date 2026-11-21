@@ -56,12 +56,23 @@
 
 /* Cabeçalho */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
   background-color: var(--verde-escuro);
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 64px 16px 28px;
+  transform: translateY(0);
+  transition: transform 0.25s ease;
+}
+
+.header--escondido {
+  transform: translateY(-100%);
 }
 
 .header .logo {
@@ -144,8 +155,8 @@
 }
 
 /* Página Inicial */
-main > .container:first-child {
-  padding-top: 120px;
+main {
+  padding-top: 112px;
 }
 
 .foto-grande {
@@ -218,9 +229,7 @@ main > .container:first-child {
 }
 
 /* Página Currículo */
-.curriculo {
-  padding-top: 110px;
-}
+
 
 .curriculo-subtitulo {
   max-width: 760px;
@@ -260,6 +269,14 @@ main > .container:first-child {
 
 /* Celular e telas pequenas */
 @media (max-width: 900px) {
+  main {
+    padding-top: 150px;
+  }
+
+  .curriculo {
+    padding-top: 16px;
+  }
+
   .container {
     padding: 0 16px;
   }
