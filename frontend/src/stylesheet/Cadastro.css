@@ -1,0 +1,45 @@
+.cadastro-page {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cadastro-page h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.cadastro-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.cadastro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cadastro-campo--full {
+  grid-column: 1 / -1;
+}
+
+.cadastro-campo label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.cadastro-campo input,
+.cadastro-campo select,
+.cadastro-campo textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .cadastro-form {
+    grid-template-columns: 1fr;
+  }
+}

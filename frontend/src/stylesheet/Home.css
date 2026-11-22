@@ -1,0 +1,35 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.home-hero {
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.home-hero h1 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-hero p {
+  max-width: 65ch;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.home-card {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 1.25rem;
+}

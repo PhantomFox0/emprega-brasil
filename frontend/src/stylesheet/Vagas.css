@@ -1,0 +1,139 @@
+.vagas-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 32px 72px;
+  background-color: #ffffff;
+  color: #111111;
+}
+
+.vagas-titulo {
+  margin: 0 0 40px;
+  text-align: center;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #0f0f0f;
+}
+
+/* Grid: coluna de texto à esquerda, cards à direita */
+.vagas-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.45fr);
+  gap: 56px;
+  align-items: start;
+}
+
+/* Coluna esquerda */
+.vagas-info-coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+  padding-top: 6px;
+}
+
+.vagas-texto-destaque {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #141414;
+}
+
+.vagas-texto-destaque strong {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f0f0f;
+}
+
+.vagas-texto-apoio {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #141414;
+}
+
+/* Coluna direita (cards) */
+.vagas-lista-coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.vagas-card {
+  background-color: #b7c694;
+  border-radius: 4px;
+  padding: 24px 28px 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vagas-card-titulo {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0f0f0f;
+}
+
+.vagas-card-descricao {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #1f2416;
+}
+
+.vagas-card-acoes {
+  display: flex;
+  justify-content: center;
+}
+
+.vagas-card-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  height: 40px;
+  padding: 0 22px;
+  border-radius: 6px;
+  background-color: #15210b;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.vagas-card-botao:hover {
+  background-color: #213412;
+}
+
+.vagas-card-botao:active {
+  transform: translateY(1px);
+}
+
+/* Responsividade */
+@media (max-width: 820px) {
+  .vagas-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .vagas-info-coluna {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .vagas-container {
+    padding: 28px 16px 56px;
+  }
+
+  .vagas-titulo {
+    font-size: 32px;
+    margin-bottom: 28px;
+  }
+
+  .vagas-card {
+    padding: 20px;
+  }
+}

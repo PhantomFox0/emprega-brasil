@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: perfil_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${DB_NAME:-perfil_db}
+      MYSQL_USER: ${DB_USER:-perfil_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-perfil_password}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: perfil_api
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-3000}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-perfil_user}
+      DB_PASSWORD: ${DB_PASSWORD:-perfil_password}
+      DB_NAME: ${DB_NAME:-perfil_db}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./fotos:/usr/src/app/fotos
+
+volumes:
+  mysql_data:
