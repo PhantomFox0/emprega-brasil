@@ -1,4 +1,6 @@
 import { useEffect, useId, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { perfilApi } from '../services/perfilApi';
 import '../stylesheet/PerfilPage.css';
 
@@ -15,13 +17,8 @@ const ESTADO_VAZIO = {
   competencias_comportamentais: [],
 };
 
-const TIPOS_IMAGEM_PERMITIDOS = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-  'image/gif',
-];
+// O backend (uploadFoto) só aceita JPG e PNG.
+const TIPOS_IMAGEM_PERMITIDOS = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const TAMANHO_MAXIMO_BYTES = 5 * 1024 * 1024; // 5 MB
 
@@ -36,9 +33,13 @@ function resolverUrlFoto(avatarUrl, baseApiUrl) {
   return `${backendOrigin}${caminhoNormalizado}`;
 }
 
-export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
+export default function Perfil() {
   const fotoInputId = useId();
-  const [modoEdicao, setModoEdicao] = useState(false);
+  const location = useLocation();
+  const { updateUser } = useAuth();
+  // Quem acabou de criar a conta chega aqui já no modo de edição para completar os dados.
+  const primeiroAcesso = Boolean(location.state?.primeiroAcesso);
+  const [modoEdicao, setModoEdicao] = useState(primeiroAcesso);
   const [perfilAtual, setPerfilAtual] = useState(ESTADO_VAZIO);
   const [form, setForm] = useState(ESTADO_VAZIO);
   const [fotoFile, setFotoFile] = useState(null);
@@ -94,7 +95,7 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
       setFeedback(null);
 
       try {
-        const perfil = await perfilApi.buscarPorId(perfilId);
+        const perfil = await perfilApi.buscarMeuPerfil();
         if (!ativo) return;
         sincronizarEstados(perfil);
       } catch (error) {
@@ -114,7 +115,7 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
     return () => {
       ativo = false;
     };
-  }, [perfilId]);
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -128,7 +129,7 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
     if (!TIPOS_IMAGEM_PERMITIDOS.includes(file.type)) {
       setFeedback({
         tipo: 'erro',
-        mensagem: 'Selecione uma imagem válida (JPG, PNG, WEBP ou GIF).',
+        mensagem: 'Selecione uma imagem válida (JPG ou PNG).',
       });
       e.target.value = '';
       return;
@@ -194,16 +195,13 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
     };
 
     try {
-      const resultado = await perfilApi.atualizar(perfilId, payload);
-      const salvo = resultado.data || {
-        ...payload,
-        avatar_url: perfilAtual.avatar_url,
-      };
+      const salvo = await perfilApi.atualizarMeuPerfil(payload);
       sincronizarEstados(salvo);
+      updateUser({ nome: salvo.nome, email: salvo.email });
       setModoEdicao(false);
       setFeedback({
         tipo: 'sucesso',
-        mensagem: resultado.message || 'Alterações salvas com sucesso.',
+        mensagem: 'Alterações salvas com sucesso.',
       });
     } catch (error) {
       setFeedback({
@@ -261,17 +259,14 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
             Editar perfil
           </button>
 
-          {typeof onIrParaCadastro === 'function' && (
-            <button
-              type="button"
-              className="btn-secundario"
-              onClick={onIrParaCadastro}
-            >
-              Novo cadastro
-            </button>
-          )}
         </div>
       </div>
+
+      {primeiroAcesso && modoEdicao && (
+        <p role="status" className="perfil-feedback perfil-feedback--sucesso">
+          Conta criada! Complete seus dados para receber vagas mais alinhadas ao seu perfil.
+        </p>
+      )}
 
       {feedback && (
         <p
@@ -584,13 +579,13 @@ export default function Perfil({ perfilId = 1, onIrParaCadastro }) {
                 <input
                   id={fotoInputId}
                   type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  accept="image/jpeg,image/png"
                   onChange={handleFotoChange}
                   className="foto-input-oculto"
                 />
 
                 <span className="foto-curricular-ajuda">
-                  JPG, PNG, WEBP ou GIF até 5 MB (padrão curricular / LinkedIn).
+                  JPG ou PNG, até 5 MB (padrão curricular / LinkedIn).
                 </span>
               </div>
             </div>

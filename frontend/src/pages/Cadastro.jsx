@@ -1,361 +1,173 @@
-import { useEffect, useId, useState } from 'react';
-import { perfilApi } from '../services/perfilApi';
-import '../stylesheet/PerfilPage.css';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/AuthLayout';
+import Campo from '../components/Campo';
+import { useAuth } from '../hooks/useAuth';
+import { getErrorMessage } from '../services/apiError';
 
-const ESTADO_INICIAL = {
-  nome: '',
-  email: '',
-  telefone: '',
-  escolaridade: '',
-  carreira: '',
-  area_interesse: '',
-  habilidades_texto: '',
-};
+const ESTADO_INICIAL = { nome: '', email: '', usuario: '', senha: '', confirmarSenha: '' };
 
-const TIPOS_IMAGEM_PERMITIDOS = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  
-];
+const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Sem "@" no usuário: o login aceita e-mail ou usuário no mesmo campo e os dois não podem se confundir.
+const REGEX_USUARIO = /^[a-zA-Z0-9._-]{3,30}$/;
 
-const TAMANHO_MAXIMO_BYTES = 5 * 1024 * 1024; // 5 MB
+function validar(form) {
+  const erros = {};
 
-export default function Cadastro({ onSucesso, onIrParaPerfil }) {
-  const fotoInputId = useId();
+  if (form.nome.trim().length < 2) erros.nome = 'Informe seu nome completo.';
+  if (!REGEX_EMAIL.test(form.email.trim())) erros.email = 'Informe um e-mail válido, como nome@exemplo.com.';
+  if (!REGEX_USUARIO.test(form.usuario.trim())) {
+    erros.usuario = 'Use de 3 a 30 caracteres: letras, números, ponto, hífen ou sublinhado.';
+  }
+  if (form.senha.length < 8 || form.senha.length > 72) {
+    erros.senha = 'A senha precisa ter de 8 a 72 caracteres.';
+  }
+  if (form.confirmarSenha !== form.senha) erros.confirmarSenha = 'As senhas não são iguais.';
+
+  return erros;
+}
+
+export default function Cadastro() {
+  const { register, login } = useAuth();
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+
   const [form, setForm] = useState(ESTADO_INICIAL);
-  const [fotoFile, setFotoFile] = useState(null);
-  const [fotoPreviewUrl, setFotoPreviewUrl] = useState('');
-  const [tecnicasTexto, setTecnicasTexto] = useState(
-    'Excel, Java, Python, Análise de Dados'
-  );
-  const [comportamentaisTexto, setComportamentaisTexto] = useState(
-    'Trabalho em Equipe, Proatividade, Pensamento Crítico'
-  );
-  const [saving, setSaving] = useState(false);
-  const [feedback, setFeedback] = useState(null);
+  const [erros, setErros] = useState({});
+  const [erroGeral, setErroGeral] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  // Gera e limpa a URL temporária de pré-visualização da foto selecionada
+  // Leva o foco ao primeiro campo com erro depois que a tela é atualizada.
   useEffect(() => {
-    if (!(fotoFile instanceof File)) {
-      setFotoPreviewUrl('');
-      return undefined;
-    }
+    formRef.current?.querySelector('[aria-invalid="true"]')?.focus();
+  }, [erros]);
 
-    const objectUrl = URL.createObjectURL(fotoFile);
-    setFotoPreviewUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [fotoFile]);
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm((anterior) => ({ ...anterior, [name]: value }));
+    if (erros[name]) setErros((anteriores) => ({ ...anteriores, [name]: undefined }));
   }
 
-  function handleFotoChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (carregando) return;
 
-    if (!TIPOS_IMAGEM_PERMITIDOS.includes(file.type)) {
-      setFeedback({
-        tipo: 'erro',
-        mensagem: 'Selecione uma imagem válida (JPG, PNG, WEBP ou GIF).',
-      });
-      e.target.value = '';
-      return;
-    }
+    setErroGeral('');
+    const encontrados = validar(form);
+    setErros(encontrados);
+    if (Object.keys(encontrados).length > 0) return;
 
-    if (file.size > TAMANHO_MAXIMO_BYTES) {
-      setFeedback({
-        tipo: 'erro',
-        mensagem: 'A foto de perfil deve ter no máximo 5 MB.',
-      });
-      e.target.value = '';
-      return;
-    }
-
-    setFeedback(null);
-    setFotoFile(file);
-  }
-
-  function handleRemoverFoto() {
-    const inputEl = document.getElementById(fotoInputId);
-    if (inputEl) inputEl.value = '';
-    setFotoFile(null);
-  }
-
-  function parseLista(texto) {
-    return texto
-      .split(',')
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setSaving(true);
-    setFeedback(null);
-
-    const payload = {
-      ...form,
-      competencias_tecnicas: parseLista(tecnicasTexto),
-      competencias_comportamentais: parseLista(comportamentaisTexto),
-      ...(fotoFile instanceof File ? { foto: fotoFile } : {}),
-    };
-
+    setCarregando(true);
     try {
-      const resultado = await perfilApi.criar(payload);
-      const criado = resultado.data;
-
-      setFeedback({
-        tipo: 'sucesso',
-        mensagem: resultado.message || 'Perfil cadastrado com sucesso!',
+      await register({
+        nome: form.nome.trim(),
+        email: form.email.trim(),
+        usuario: form.usuario.trim(),
+        senha: form.senha,
       });
-
-      setForm(ESTADO_INICIAL);
-      handleRemoverFoto();
-
-      if (typeof onSucesso === 'function') {
-        onSucesso(criado);
-      }
     } catch (error) {
-      setFeedback({
-        tipo: 'erro',
-        mensagem:
-          error.response?.data?.error || 'Não foi possível concluir o cadastro.',
+      const mensagem = getErrorMessage(error, 'Não foi possível criar a conta. Tente novamente.');
+      if (error.response?.status === 409 && /e-?mail/i.test(mensagem)) {
+        setErros({ email: mensagem });
+      } else if (error.response?.status === 409) {
+        setErros({ usuario: mensagem });
+      } else {
+        setErroGeral(mensagem);
+      }
+      setCarregando(false);
+      return;
+    }
+
+    // Conta criada: entra direto e leva a pessoa para completar o perfil.
+    try {
+      await login({ username: form.usuario.trim(), password: form.senha });
+      navigate('/perfil', { replace: true, state: { primeiroAcesso: true } });
+    } catch {
+      navigate('/login', {
+        replace: true,
+        state: { aviso: 'Conta criada! Entre com seu e-mail ou usuário e sua senha.' },
       });
-    } finally {
-      setSaving(false);
     }
   }
-
-  const tecnicasLista = parseLista(tecnicasTexto);
-  const comportamentaisLista = parseLista(comportamentaisTexto);
 
   return (
-    <div className="perfil-container">
-      <div className="perfil-topbar">
-        <div>
-          <h1 className="perfil-titulo">Cadastro</h1>
-          <p className="perfil-subtitulo">
-            Preencha seus dados profissionais, foto, área de interesse e habilidades.
+    <AuthLayout
+      painelTitulo="Comece pelo perfil."
+      painelTexto="Crie sua conta, conte suas habilidades e encontre vagas nas principais plataformas do país."
+      titulo="Criar conta"
+      subtitulo="Leva um minuto. Os dados profissionais você completa depois."
+      rodape={
+        <>
+          Já tem conta? <Link to="/login">Entrar</Link>
+        </>
+      }
+    >
+      <form className="auth-form" ref={formRef} onSubmit={handleSubmit} noValidate>
+        {erroGeral && (
+          <p className="auth-erro" role="alert">
+            {erroGeral}
           </p>
-        </div>
-
-        {typeof onIrParaPerfil === 'function' && (
-          <button
-            type="button"
-            className="btn-secundario"
-            onClick={onIrParaPerfil}
-          >
-            Visualizar perfil
-          </button>
         )}
-      </div>
 
-      <form className="perfil-layout" onSubmit={handleSubmit}>
-        <div className="perfil-form-column">
-          {feedback && (
-            <p
-              role="alert"
-              className={`perfil-feedback ${
-                feedback.tipo === 'sucesso'
-                  ? 'perfil-feedback--sucesso'
-                  : 'perfil-feedback--erro'
-              }`}
-            >
-              {feedback.mensagem}
-            </p>
-          )}
+        <Campo
+          label="Nome completo"
+          name="nome"
+          autoComplete="name"
+          autoFocus
+          value={form.nome}
+          onChange={handleChange}
+          error={erros.nome}
+        />
 
-          <div className="perfil-campos">
-            <input
-              type="text"
-              name="nome"
-              className="perfil-input"
-              placeholder="Nome do usuário"
-              value={form.nome}
-              onChange={handleChange}
-              required
-            />
+        <Campo
+          label="E-mail"
+          type="email"
+          name="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          value={form.email}
+          onChange={handleChange}
+          error={erros.email}
+        />
 
-            <input
-              type="email"
-              name="email"
-              className="perfil-input"
-              placeholder="Email do usuário"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
+        <Campo
+          label="Nome de usuário"
+          name="usuario"
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+          value={form.usuario}
+          onChange={handleChange}
+          error={erros.usuario}
+          hint="Você poderá entrar com ele ou com o e-mail."
+        />
 
-            <input
-              type="text"
-              name="telefone"
-              className="perfil-input"
-              placeholder="Telefone do usuário"
-              value={form.telefone}
-              onChange={handleChange}
-            />
+        <Campo
+          label="Senha"
+          type="password"
+          name="senha"
+          autoComplete="new-password"
+          value={form.senha}
+          onChange={handleChange}
+          error={erros.senha}
+          hint="De 8 a 72 caracteres."
+        />
 
-            <input
-              type="text"
-              name="escolaridade"
-              className="perfil-input"
-              placeholder="Escolaridade do usuário"
-              value={form.escolaridade}
-              onChange={handleChange}
-            />
+        <Campo
+          label="Confirmar senha"
+          type="password"
+          name="confirmarSenha"
+          autoComplete="new-password"
+          value={form.confirmarSenha}
+          onChange={handleChange}
+          error={erros.confirmarSenha}
+        />
 
-            <input
-              type="text"
-              name="carreira"
-              className="perfil-input"
-              placeholder="Carreira do usuário"
-              value={form.carreira}
-              onChange={handleChange}
-            />
-
-            <input
-              type="text"
-              name="area_interesse"
-              className="perfil-input"
-              placeholder="Área de Interesse do usuário"
-              value={form.area_interesse}
-              onChange={handleChange}
-            />
-          </div>
-
-          <h2 className="habilidades-titulo">Habilidades</h2>
-          <p className="habilidades-descricao">
-            Área para o usuário inserir informações que esclareçam, em formato de
-            texto, suas habilidades.
-          </p>
-
-          <div className="perfil-campos">
-            <textarea
-              name="habilidades_texto"
-              className="perfil-textarea"
-              placeholder="Descreva suas principais experiências e habilidades..."
-              value={form.habilidades_texto}
-              onChange={handleChange}
-            />
-
-            <label className="perfil-label">
-              Competências Técnicas (separadas por vírgula)
-              <input
-                type="text"
-                className="perfil-input"
-                placeholder="Ex.: Excel, Java, Python, Análise de Dados"
-                value={tecnicasTexto}
-                onChange={(e) => setTecnicasTexto(e.target.value)}
-              />
-            </label>
-
-            <label className="perfil-label">
-              Competências Comportamentais (separadas por vírgula)
-              <input
-                type="text"
-                className="perfil-input"
-                placeholder="Ex.: Trabalho em Equipe, Proatividade, Pensamento Crítico"
-                value={comportamentaisTexto}
-                onChange={(e) => setComportamentaisTexto(e.target.value)}
-              />
-            </label>
-          </div>
-
-          <div className="competencias-grid">
-            <div>
-              <h3 className="competencias-coluna-titulo">Competências Técnicas</h3>
-              <div className="competencias-lista">
-                {tecnicasLista.length > 0 ? (
-                  tecnicasLista.map((item) => (
-                    <span key={item} className="competencia-item">
-                      {item}
-                    </span>
-                  ))
-                ) : (
-                  <span className="competencia-item competencia-item--vazio">
-                    Nenhuma informada
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="competencias-coluna-titulo">
-                Competências Comportamentais
-              </h3>
-              <div className="competencias-lista">
-                {comportamentaisLista.length > 0 ? (
-                  comportamentaisLista.map((item) => (
-                    <span key={item} className="competencia-item">
-                      {item}
-                    </span>
-                  ))
-                ) : (
-                  <span className="competencia-item competencia-item--vazio">
-                    Nenhuma informada
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="perfil-acoes">
-            <button type="submit" className="btn-salvar" disabled={saving}>
-              {saving ? 'Cadastrando...' : 'Concluir Cadastro'}
-            </button>
-          </div>
-        </div>
-
-        <div className="perfil-media-column">
-          <div className="foto-curricular-card">
-            <div className="foto-curricular-frame">
-              {fotoPreviewUrl ? (
-                <img
-                  src={fotoPreviewUrl}
-                  alt={`Prévia de ${form.nome || 'usuário'}`}
-                  className="perfil-avatar-img"
-                />
-              ) : (
-                <div className="perfil-avatar-placeholder">
-                  <span>Adicione sua foto profissional</span>
-                </div>
-              )}
-            </div>
-
-            <div className="foto-curricular-acoes">
-              <label htmlFor={fotoInputId} className="btn-upload-foto">
-                {fotoPreviewUrl ? 'Alterar foto' : 'Adicionar foto'}
-              </label>
-
-              {fotoFile instanceof File && (
-                <button
-                  type="button"
-                  className="btn-remover-selecao"
-                  onClick={handleRemoverFoto}
-                >
-                  Remover foto selecionada
-                </button>
-              )}
-
-              <input
-                id={fotoInputId}
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                onChange={handleFotoChange}
-                className="foto-input-oculto"
-              />
-
-              <span className="foto-curricular-ajuda">
-                JPG, PNG, até 5 MB (padrão curricular / LinkedIn).
-              </span>
-            </div>
-          </div>
-        </div>
+        <button type="submit" className="btn btn--primario auth-enviar" disabled={carregando}>
+          {carregando ? 'Criando conta...' : 'Criar conta'}
+        </button>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

@@ -3,3 +3,4 @@ fotos/
 .env
 npm-debug.log*
 .DS_Store
+.vercel

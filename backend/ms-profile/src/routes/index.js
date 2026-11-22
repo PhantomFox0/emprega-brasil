@@ -2,6 +2,7 @@ const { Router } = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('../config/swagger');
 const perfilRoutes = require('./perfilRoutes');
+const authRoutes = require('./authRoutes');
 
 const router = Router();
 
@@ -36,6 +37,7 @@ router.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+router.use('/auth', authRoutes);
 router.use('/perfis', perfilRoutes);
 
 module.exports = router;

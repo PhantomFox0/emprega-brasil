@@ -1,8 +1,4 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-});
+import api from './api';
 
 function buildPerfilFormData(payload) {
   const formData = new FormData();
@@ -44,31 +40,16 @@ function buildPerfilFormData(payload) {
   return formData;
 }
 
+// O perfil sempre é o do usuário autenticado (token Bearer): o backend não expõe mais /perfis/:id.
 export const perfilApi = {
-  listar: async () => {
-    const response = await api.get('/perfis');
-    return response.data.data;
-  },
-
-  buscarPorId: async (id) => {
-    const response = await api.get(`/perfis/${id}`);
-    return response.data.data;
-  },
-
-  criar: async (payload) => {
-    const body = payload.foto instanceof File ? buildPerfilFormData(payload) : payload;
-    const response = await api.post('/perfis', body);
+  buscarMeuPerfil: async () => {
+    const response = await api.get('/perfis/me');
     return response.data;
   },
 
-  atualizar: async (id, payload) => {
+  atualizarMeuPerfil: async (payload) => {
     const body = payload.foto instanceof File ? buildPerfilFormData(payload) : payload;
-    const response = await api.put(`/perfis/${id}`, body);
-    return response.data;
-  },
-
-  remover: async (id) => {
-    const response = await api.delete(`/perfis/${id}`);
+    const response = await api.put('/perfis/me', body);
     return response.data;
   },
 };

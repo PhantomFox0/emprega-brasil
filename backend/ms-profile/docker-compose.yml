@@ -36,6 +36,8 @@ services:
       DB_USER: ${DB_USER:-perfil_user}
       DB_PASSWORD: ${DB_PASSWORD:-perfil_password}
       DB_NAME: ${DB_NAME:-perfil_db}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
     ports:
       - "${PORT:-3000}:3000"
     volumes:

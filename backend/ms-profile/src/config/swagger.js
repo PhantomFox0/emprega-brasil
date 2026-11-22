@@ -22,11 +22,22 @@ const options = {
         description: 'Verificação de estado da API',
       },
       {
+        name: 'Auth',
+        description: 'Autenticação OAuth2 (password grant) com JWT Bearer',
+      },
+      {
         name: 'Perfis',
         description: 'Operações CRUD de perfil e habilidades',
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        oauth2Password: {
+          type: 'oauth2',
+          flows: { password: { tokenUrl: '/api/auth/token', scopes: {} } },
+        },
+      },
       schemas: {
         Perfil: {
           type: 'object',

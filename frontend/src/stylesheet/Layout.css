@@ -34,43 +34,6 @@ body {
   padding: 2.5rem 2rem 4rem;
 }
 
-/* Header */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.9rem 2rem;
-  background-color: #0b1912;
-  color: #ffffff;
-  transition: transform 0.25s ease;
-}
-
-.header--escondido {
-  transform: translateY(-100%);
-}
-
-.menu {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.menu a {
-  color: #e5e7eb;
-  text-decoration: none;
-  font-size: 0.92rem;
-  transition: color 0.2s ease;
-}
-
-.menu a:hover,
-.menu a.active {
-  color: #ffffff;
-  font-weight: 600;
-}
-
 /* Footer */
 .footer {
   background-color: #d9d9d9;
@@ -114,17 +77,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .header {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-  }
-
-  .menu {
-    flex-wrap: wrap;
-    gap: 0.85rem;
-  }
-
   .footer-topo {
     flex-direction: column;
     align-items: flex-start;

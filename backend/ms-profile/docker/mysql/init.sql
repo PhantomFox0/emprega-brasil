@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS perfis (
 
 
 
-INSERT INTO perfis (nome, email, telefone, escolaridade, carreira, area_interesse, avatar_url, habilidades_texto, competencias_tecnicas, competencias_comportamentais)
-VALUES ('Ana Clara Silva', 'ana.silva@exemplo.com', '(11) 99999-0000', 'Superior Completo', 'Analista de Dados', 'Inteligência de Negócios e Backend', 'https://exemplo.com/avatar.png', 'Experiência prática em análise exploratória, dashboards e resolução de problemas.', JSON_ARRAY('Excel', 'Java', 'Python', 'Análise de Dados'), JSON_ARRAY('Trabalho em Equipe', 'Proatividade', 'Pensamento Crítico'))
+INSERT INTO perfis (nome, email, usuario, senha, telefone, escolaridade, carreira, area_interesse, avatar_url, habilidades_texto, competencias_tecnicas, competencias_comportamentais)
+VALUES ('Ana Clara Silva', 'ana.silva@exemplo.com', 'ana.silva', '$2b$12$aHpi8Tycfsq0d27n7ndEXOjPeDv9iA9IdtIKq84VquEJzT0aDF54S', '(11) 99999-0000', 'Superior Completo', 'Analista de Dados', 'Inteligência de Negócios e Backend', 'https://exemplo.com/avatar.png', 'Experiência prática em análise exploratória, dashboards e resolução de problemas.', JSON_ARRAY('Excel', 'Java', 'Python', 'Análise de Dados'), JSON_ARRAY('Trabalho em Equipe', 'Proatividade', 'Pensamento Crítico'))
 ON DUPLICATE KEY UPDATE email = email;
 
 CREATE TABLE IF NOT EXISTS Sessions (

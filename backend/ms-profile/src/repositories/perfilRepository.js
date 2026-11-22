@@ -1,5 +1,5 @@
 // src/repositories/perfilRepository.js
-const pool = require("../config/database");
+const { pool } = require("../config/database");
 
 const SAFE_PERFIL_COLUMNS = `
   id,

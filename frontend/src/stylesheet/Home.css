@@ -1,35 +1,27 @@
-.home-page {
+/* Chamadas para ação no topo da Página Inicial */
+.hero-acoes {
   display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 32px 0 56px;
 }
 
-.home-hero {
-  padding: 2rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: #f9fafb;
+/* Cada seção (link + descrição) forma um bloco; a descrição fica colada ao seu link */
+.secoes-item {
+  margin-bottom: 56px;
 }
 
-.home-hero h1 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
+.secoes-item p {
+  margin-bottom: 0;
 }
 
-.home-hero p {
-  max-width: 65ch;
-  color: #4b5563;
-  line-height: 1.5;
-}
+@media (max-width: 900px) {
+  .hero-acoes {
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
 
-.home-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
-}
-
-.home-card {
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 1.25rem;
+  .hero-acoes .btn {
+    width: 100%;
+  }
 }

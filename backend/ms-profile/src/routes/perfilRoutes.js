@@ -1,4 +1,3 @@
-// src/routes/perfilRoutes.js
 const express = require("express");
 const perfilController = require("../controllers/perfilController");
 const authenticateJwt = require("../middlewares/authenticateJwt");
