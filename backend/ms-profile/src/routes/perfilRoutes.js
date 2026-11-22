@@ -1,20 +1,15 @@
-const { Router } = require('express');
-const perfilController = require('../controllers/perfilController');
-const { uploadFoto } = require('../middlewares/uploadFoto');
-const {
-  validateIdParam,
-  validateCreatePerfil,
-  validateUpdatePerfil,
-} = require('../middlewares/validatePerfil');
+// src/routes/perfilRoutes.js
+const express = require("express");
+const perfilController = require("../controllers/perfilController");
+const authenticateJwt = require("../middlewares/authenticateJwt");
 
-const router = Router();
+const router = express.Router();
 
-router.get('/', perfilController.index);
-router.get('/:id', validateIdParam, perfilController.show);
-router.post('/', uploadFoto, validateCreatePerfil, perfilController.store);
-router.put('/:id', validateIdParam, uploadFoto, validateUpdatePerfil, perfilController.update);
-router.patch('/:id', validateIdParam, uploadFoto, validateUpdatePerfil, perfilController.update);
-router.post('/:id/foto', validateIdParam, uploadFoto, perfilController.update);
-router.delete('/:id', validateIdParam, perfilController.destroy);
+router.use(authenticateJwt);
+
+router.get("/me", perfilController.getMeuPerfil);
+router.put("/me", perfilController.updateMeuPerfil);
+router.patch("/me", perfilController.updateMeuPerfil);
+router.get("/me/:id", perfilController.getPerfilById);
 
 module.exports = router;
