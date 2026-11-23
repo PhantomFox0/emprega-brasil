@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Logo from './Logo';
 import NavBar from './NavBar';
+import "../stylesheet/Header.css";
 
 
 function Header() {

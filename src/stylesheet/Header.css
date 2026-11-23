@@ -1,0 +1,187 @@
+/* Topo fixo: logo, menu e ações de conta (Entrar / Sair).
+   Fixo (e não sticky) porque o efeito de esconder ao rolar precisa que ele
+   volte a aparecer ao rolar para cima em qualquer ponto da página. */
+:root {
+  --header-h: 76px;
+  --header-texto: #d7dcd3;
+  --header-destaque: #b5c493;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: var(--header-h);
+  padding: 0 32px;
+  background-color: var(--verde-escuro);
+  color: #fff;
+  transition: transform 0.25s ease;
+}
+
+.header--escondido {
+  transform: translateY(-100%);
+}
+
+.header .logo {
+  color: #fff;
+  text-decoration: none;
+}
+
+.header-painel {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.menu a {
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  color: var(--header-texto);
+  font-size: 16px;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.menu a:hover {
+  color: #fff;
+}
+
+.menu a.active {
+  border-bottom-color: #fff;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Conta: separada do menu por uma linha fina */
+.auth-acoes {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.auth-saudacao {
+  max-width: 160px;
+  overflow: hidden;
+  color: var(--header-texto);
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-header {
+  padding: 8px 18px;
+  border: 1.5px solid #fff;
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-header:hover {
+  background-color: #fff;
+  color: var(--verde-escuro);
+}
+
+.menu a:focus-visible,
+.btn-header:focus-visible,
+.menu-toggle:focus-visible {
+  outline: 3px solid var(--header-destaque);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Botão do menu: só aparece em telas pequenas */
+.menu-toggle {
+  display: none;
+  padding: 8px 16px;
+  border: 1.5px solid #fff;
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  /* O menu vira um painel que abre por cima da página, sem empurrar o conteúdo */
+  .header-painel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 4px 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: var(--verde-escuro);
+    box-shadow: 0 14px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .header--aberto .header-painel {
+    display: flex;
+  }
+
+  .menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .menu a {
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 18px;
+  }
+
+  .menu a.active {
+    padding-left: 12px;
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    border-left: 3px solid var(--header-destaque);
+  }
+
+  .auth-acoes {
+    justify-content: space-between;
+    padding: 16px 4px 0;
+    border-left: 0;
+  }
+
+  .auth-saudacao {
+    max-width: none;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
+}
