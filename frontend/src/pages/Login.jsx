@@ -25,7 +25,7 @@ export default function Login() {
 
     setErro('');
     if (!username.trim() || !password) {
-      setErro('Informe seu e-mail ou usuário e a senha.');
+      setErro('Informe seu e-mail e a senha.');
       return;
     }
 
@@ -44,7 +44,7 @@ export default function Login() {
       painelTitulo="Bom ver você de volta."
       painelTexto="Entre para editar seu perfil e seguir procurando vagas."
       titulo="Entrar"
-      subtitulo="Use seu e-mail ou nome de usuário."
+      subtitulo="Use seu e-mail e senha."
       rodape={
         <>
           Ainda não tem conta? <Link to="/cadastro">Criar conta</Link>
@@ -69,7 +69,7 @@ export default function Login() {
         )}
 
         <Campo
-          label="E-mail ou usuário"
+          label="E-mail"
           name="username"
           autoComplete="username"
           autoCapitalize="none"

@@ -1,0 +1,49 @@
+# Sobe backend + frontend (banco no AWS RDS).
+#   docker compose up --build
+# MySQL local opcional (defina DB_HOST=mysql e DB_SSL=false no backend/ms-profile/.env):
+#   docker compose --profile local up --build
+services:
+  api:
+    build:
+      context: ./backend/ms-profile
+    container_name: perfil_api
+    restart: unless-stopped
+    env_file: ./backend/ms-profile/.env
+    environment:
+      PORT: 3000
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/ms-profile/fotos:/usr/src/app/fotos
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        # URL da API como o NAVEGADOR enxerga (não o nome do container)
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+    container_name: perfil_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+  mysql:
+    image: mysql:8.4
+    container_name: perfil_mysql
+    profiles: ["local"]
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${DB_NAME:-perfil_db}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/ms-profile/docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  mysql_data:
