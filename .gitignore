@@ -1,0 +1,35 @@
+# Dependências e builds
+node_modules/
+dist/
+build/
+coverage/
+
+# Segredos e ambiente (versione apenas os *.example)
+.env
+.env.*
+!.env.example
+*.key
+*.kubeconfig
+kubeconfig*
+k8s/**/secret.yaml
+k8s/**/*-secret.yaml
+!k8s/**/secret.example.yaml
+
+# Uploads de usuários
+backend/ms-profile/fotos/*
+!backend/ms-profile/fotos/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Deploy / ferramentas
+.vercel/
+.codegraph/
+.claude/
+
+# SO e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
