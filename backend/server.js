@@ -364,3 +364,42 @@ app.put("/api/usuarios/:id", async (req, res) => {
     return res.status(500).json({ error: "Erro interno ao salvar perfil." });
   }
 });
+
+// ================= LOGIN =================
+function verificarSenha(senhaDigitada, hashArmazenado) {
+  if (!hashArmazenado || !hashArmazenado.includes(":")) return false;
+  const [salt, hashOriginalHex] = hashArmazenado.split(":");
+  const hashDigitado = crypto.scryptSync(senhaDigitada, salt, 64);
+  const hashOriginal = Buffer.from(hashOriginalHex, "hex");
+  if (hashDigitado.length !== hashOriginal.length) return false;
+  return crypto.timingSafeEqual(hashDigitado, hashOriginal);
+}
+
+// 4. Autenticar usuário (por e-mail ou nome de usuário + senha)
+app.post("/api/usuarios/login", async (req, res) => {
+  try {
+    const { identificador, usuario, email, senha } = req.body || {};
+    const loginInformado = String(identificador || usuario || email || "").trim();
+
+    if (!loginInformado || !senha) {
+      return res.status(400).json({ error: "Informe seu e-mail ou usuário e a senha." });
+    }
+
+    const ehEmail = loginInformado.includes("@");
+    const [rows] = await pool.query(
+      ehEmail
+        ? "SELECT * FROM usuarios WHERE LOWER(user_email) = LOWER(?) LIMIT 1"
+        : "SELECT * FROM usuarios WHERE user_usuario = ? LIMIT 1",
+      [ehEmail ? loginInformado.toLowerCase() : loginInformado]
+    );
+
+    if (rows.length === 0 || !verificarSenha(senha, rows[0].user_senha_hash)) {
+      return res.status(401).json({ error: "E-mail/usuário ou senha inválidos." });
+    }
+
+    return res.json(formatarUsuarioResposta(rows[0]));
+  } catch (error) {
+    console.error("Erro ao realizar login:", error);
+    return res.status(500).json({ error: "Erro interno ao entrar." });
+  }
+});

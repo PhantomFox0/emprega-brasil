@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Página Login
+   ========================================================================== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.login-aviso {
+  margin: 0;
+  padding: 11px 14px;
+  border: 1px solid #b7dfb9;
+  border-radius: 6px;
+  background-color: #edf7ed;
+  color: #1e4620;
+  font-size: 14px;
+}
+
+.login-senha-controle {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.login-senha-controle input {
+  flex: 1;
+  min-width: 0;
+}
+
+.login-senha-toggle {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #8c8c8c;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+  color: var(--verde-escuro);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.login-senha-toggle:hover {
+  background-color: #ececec;
+}
