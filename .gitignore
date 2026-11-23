@@ -33,3 +33,4 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+backend/ms-profile/certs/*.pem
