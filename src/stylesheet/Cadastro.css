@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Página Cadastro
+   ========================================================================== */
+.cadastro-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.35fr);
+  gap: 40px;
+  align-items: stretch;
+}
+
+.cadastro-painel {
+  background-color: var(--verde-escuro);
+  color: #ffffff;
+  padding: 40px 32px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cadastro-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 10px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  background-color: rgba(181, 196, 147, 0.2);
+  color: #b5c493;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cadastro-painel-titulo {
+  margin: 0 0 14px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cadastro-painel-texto {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #d7dcd3;
+}
+
+.cadastro-card {
+  padding: 32px;
+  border: 1px solid var(--cinza-claro);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.cadastro-titulo {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.cadastro-subtitulo {
+  font-size: 16px;
+  color: var(--cinza-texto);
+  margin-bottom: 24px;
+}
+
+.cadastro-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cadastro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cadastro-campo--full {
+  grid-column: 1 / -1;
+}
+
+.cadastro-campo label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.cadastro-campo input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #8c8c8c;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #111111;
+  background-color: #ffffff;
+}
+
+.cadastro-campo input:focus {
+  outline: none;
+  border-color: var(--verde-escuro);
+  box-shadow: 0 0 0 2px rgba(18, 31, 13, 0.14);
+}
+
+.cadastro-campo input[aria-invalid="true"] {
+  border-color: #b91c1c;
+}
+
+.cadastro-campo-ajuda {
+  font-size: 12px;
+  color: var(--cinza-texto);
+}
+
+.cadastro-campo-erro {
+  font-size: 12px;
+  font-weight: 500;
+  color: #b91c1c;
+}
+
+.cadastro-erro-geral {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 11px 14px;
+  border: 1px solid #f5c2c0;
+  border-radius: 6px;
+  background-color: #fdecea;
+  color: #611a15;
+  font-size: 14px;
+}
+
+.cadastro-btn-enviar {
+  width: 100%;
+  height: 46px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--verde-escuro);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cadastro-btn-enviar:hover:not(:disabled) {
+  background-color: var(--verde-cinza);
+}
+
+.cadastro-btn-enviar:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.cadastro-rodape {
+  margin: 20px 0 0;
+  font-size: 15px;
+  color: #333333;
+}
+
+.cadastro-rodape a {
+  color: var(--verde-escuro);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    /* Página Cadastro - Celular */
+  .cadastro-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .cadastro-painel,
+  .cadastro-card {
+    padding: 24px 16px;
+  }
+
+  .cadastro-form {
+    grid-template-columns: 1fr;
+  }
+}

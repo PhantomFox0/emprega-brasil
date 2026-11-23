@@ -8,6 +8,7 @@ import Curriculo from "../pages/Curriculo";
 import Vagas from "../pages/Vagas";
 import Perfil from "../pages/Perfil";
 import Error from "../pages/Error";
+import Cadastro from "../pages/Cadastro";
 
 function RootLayout() {
   const { pathname } = useLocation();
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "perfil",
         element: <Perfil />,
+      },
+      {
+        path: "cadastro",
+        element: <Cadastro />,
       },
     ],
   },

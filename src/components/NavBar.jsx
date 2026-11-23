@@ -7,6 +7,7 @@ function NavBar({ className }) {
       <NavLink to="/curriculo">Currículo</NavLink>
       <NavLink to="/vagas">Vagas</NavLink>
       <NavLink to="/perfil">Perfil</NavLink>
+      <NavLink to="/cadastro">Cadastro</NavLink>
     </nav>
   );
 }

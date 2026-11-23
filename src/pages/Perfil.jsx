@@ -1,11 +1,15 @@
 import { useEffect, useId, useState } from "react";
-import "../stylesheet/Perfil.css";
+import { Link, useLocation } from "react-router-dom";
+import "../stylesheet/Perfil.css"
 
-const CHAVE_PERFIL_LOCAL = "emprega_brasil_perfil_v1";
+const API_URL = (import.meta.env.VITE_API_URL || "https://emprega-brasil.onrender.com").replace(/\/+$/, "");
+const CHAVE_USUARIO_ID = "emprega_brasil_usuario_id";
 
 const ESTADO_VAZIO = {
+  id: null,
   nome: "",
   email: "",
+  usuario: "",
   telefone: "",
   escolaridade: "",
   carreira: "",
@@ -35,29 +39,15 @@ function parseLista(texto) {
     .filter(Boolean);
 }
 
-function carregarPerfilSalvo() {
-  try {
-    const bruto = localStorage.getItem(CHAVE_PERFIL_LOCAL);
-    if (!bruto) return ESTADO_VAZIO;
-    const parsed = JSON.parse(bruto);
-    return {
-      ...ESTADO_VAZIO,
-      ...parsed,
-      competencias_tecnicas: Array.isArray(parsed.competencias_tecnicas)
-        ? parsed.competencias_tecnicas
-        : [],
-      competencias_comportamentais: Array.isArray(parsed.competencias_comportamentais)
-        ? parsed.competencias_comportamentais
-        : [],
-    };
-  } catch {
-    return ESTADO_VAZIO;
-  }
-}
-
 function Perfil() {
   const fotoInputId = useId();
-  const [modoEdicao, setModoEdicao] = useState(false);
+  const location = useLocation();
+  const primeiroAcesso = Boolean(location.state?.primeiroAcesso);
+
+  const [usuarioId, setUsuarioId] = useState(() => {
+    return location.state?.usuarioId || localStorage.getItem(CHAVE_USUARIO_ID) || "";
+  });
+  const [modoEdicao, setModoEdicao] = useState(primeiroAcesso);
   const [perfilAtual, setPerfilAtual] = useState(ESTADO_VAZIO);
   const [form, setForm] = useState(ESTADO_VAZIO);
   const [fotoFile, setFotoFile] = useState(null);
@@ -72,8 +62,12 @@ function Perfil() {
     const normalizado = {
       ...ESTADO_VAZIO,
       ...perfil,
-      competencias_tecnicas: perfil?.competencias_tecnicas || [],
-      competencias_comportamentais: perfil?.competencias_comportamentais || [],
+      competencias_tecnicas: Array.isArray(perfil?.competencias_tecnicas)
+        ? perfil.competencias_tecnicas
+        : [],
+      competencias_comportamentais: Array.isArray(perfil?.competencias_comportamentais)
+        ? perfil.competencias_comportamentais
+        : [],
     };
 
     setPerfilAtual(normalizado);
@@ -84,10 +78,45 @@ function Perfil() {
   }
 
   useEffect(() => {
-    const salvo = carregarPerfilSalvo();
-    sincronizarEstados(salvo);
-    setCarregando(false);
-  }, []);
+    const idAtivo = location.state?.usuarioId || localStorage.getItem(CHAVE_USUARIO_ID);
+    if (!idAtivo) {
+      setCarregando(false);
+      return;
+    }
+
+    setUsuarioId(String(idAtivo));
+    const controller = new AbortController();
+
+    async function carregarPerfilDoBanco() {
+      try {
+        setCarregando(true);
+        setFeedback(null);
+
+        const resposta = await fetch(`${API_URL}/api/usuarios/${idAtivo}`, {
+          signal: controller.signal,
+        });
+
+        if (!resposta.ok) {
+          throw new Error("Não foi possível carregar os dados do perfil no banco.");
+        }
+
+        const dados = await resposta.json();
+        sincronizarEstados(dados);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setFeedback({
+            tipo: "erro",
+            mensagem: err.message,
+          });
+        }
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarPerfilDoBanco();
+    return () => controller.abort();
+  }, [location.state?.usuarioId]);
 
   useEffect(() => {
     if (fotoFile instanceof File) {
@@ -154,6 +183,8 @@ function Perfil() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!usuarioId) return;
+
     setSalvando(true);
     setFeedback(null);
 
@@ -163,30 +194,39 @@ function Perfil() {
         avatarFinal = await lerArquivoComoDataUrl(fotoFile);
       }
 
-      const atualizado = {
-        nome: form.nome.trim(),
-        email: form.email.trim(),
-        telefone: form.telefone.trim(),
-        escolaridade: form.escolaridade.trim(),
-        carreira: form.carreira.trim(),
-        area_interesse: form.area_interesse.trim(),
-        avatar_url: avatarFinal,
-        habilidades_texto: form.habilidades_texto,
-        competencias_tecnicas: parseLista(tecnicasTexto),
-        competencias_comportamentais: parseLista(comportamentaisTexto),
-      };
+      const resposta = await fetch(`${API_URL}/api/usuarios/${usuarioId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: form.nome.trim(),
+          email: form.email.trim(),
+          telefone: form.telefone.trim(),
+          escolaridade: form.escolaridade.trim(),
+          carreira: form.carreira.trim(),
+          area_interesse: form.area_interesse.trim(),
+          avatar_url: avatarFinal,
+          habilidades_texto: form.habilidades_texto,
+          competencias_tecnicas: parseLista(tecnicasTexto),
+          competencias_comportamentais: parseLista(comportamentaisTexto),
+        }),
+      });
 
-      localStorage.setItem(CHAVE_PERFIL_LOCAL, JSON.stringify(atualizado));
-      sincronizarEstados(atualizado);
+      const dados = await resposta.json().catch(() => ({}));
+
+      if (!resposta.ok) {
+        throw new Error(dados.error || "Não foi possível salvar no banco de dados.");
+      }
+
+      sincronizarEstados(dados);
       setModoEdicao(false);
       setFeedback({
         tipo: "sucesso",
-        mensagem: "Alterações salvas com sucesso.",
+        mensagem: "Alterações salvas no banco de dados com sucesso.",
       });
-    } catch {
+    } catch (err) {
       setFeedback({
         tipo: "erro",
-        mensagem: "Não foi possível salvar as alterações.",
+        mensagem: err.message,
       });
     } finally {
       setSalvando(false);
@@ -196,7 +236,24 @@ function Perfil() {
   if (carregando) {
     return (
       <section className="container perfil-page">
-        <p className="subtitulo">Carregando perfil...</p>
+        <p className="subtitulo">Carregando dados do perfil...</p>
+      </section>
+    );
+  }
+
+  if (!usuarioId) {
+    return (
+      <section className="container perfil-page">
+        <h1 className="titulo perfil-titulo">Perfil</h1>
+        <p className="subtitulo perfil-subtitulo">
+          Nenhuma conta vinculada neste navegador. Crie seu cadastro para
+          salvar e visualizar seus dados no banco.
+        </p>
+        <div className="erro-acoes">
+          <Link to="/cadastro" className="erro-btn-primario">
+            Criar conta agora
+          </Link>
+        </div>
       </section>
     );
   }
@@ -217,7 +274,7 @@ function Perfil() {
           <p className="subtitulo perfil-subtitulo">
             {modoEdicao
               ? "Modo de edição: atualize seus dados, habilidades ou foto e clique em Salvar Alterações."
-              : "Visualização completa do perfil, interesses e habilidades."}
+              : "Dados importados do seu cadastro no banco de dados."}
           </p>
         </div>
 
@@ -239,6 +296,12 @@ function Perfil() {
           </button>
         </div>
       </div>
+
+      {primeiroAcesso && modoEdicao && (
+        <p role="status" className="perfil-feedback perfil-feedback--sucesso">
+          Conta criada com sucesso! Complete seus dados profissionais abaixo.
+        </p>
+      )}
 
       {feedback && (
         <p
@@ -269,6 +332,13 @@ function Perfil() {
                   <span className="perfil-dado-label">E-mail</span>
                   <strong className="perfil-dado-valor">
                     {perfilAtual.email || "Não informado"}
+                  </strong>
+                </div>
+
+                <div className="perfil-dado-card">
+                  <span className="perfil-dado-label">Usuário</span>
+                  <strong className="perfil-dado-valor">
+                    {perfilAtual.usuario ? `@${perfilAtual.usuario}` : "Não informado"}
                   </strong>
                 </div>
 
