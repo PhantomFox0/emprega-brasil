@@ -9,6 +9,7 @@ const app = express();
 
 const allowAllOrigins = env.corsOrigins.includes('*');
 
+
 const corsOptions = {
   origin(origin, callback) {
     if (!origin || allowAllOrigins || env.corsOrigins.includes(origin)) {

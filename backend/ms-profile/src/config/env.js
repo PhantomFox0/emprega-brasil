@@ -25,7 +25,7 @@ const env = {
     host: (process.env.DB_HOST || 'localhost').trim(),
     port: Number(process.env.DB_PORT) || 3306,
     user: (process.env.DB_USER || 'meu_usuario').trim(),
-    password: process.env.DB_PASSWORD || 'SenhaForte@123',
+    password: process.env.DB_PASSWORD || '',
     database: (process.env.DB_NAME || 'perfil_db').trim(),
     // SSL: obrigatório no RDS. Defina DB_SSL=false apenas para MySQL local.
     ssl: String(process.env.DB_SSL || 'true').trim().toLowerCase() !== 'false',

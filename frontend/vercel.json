@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://emprega-brasil-api-murex.vercel.app/api/:path*" },
+    { "source": "/fotos/:path*", "destination": "https://emprega-brasil-api-murex.vercel.app/fotos/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

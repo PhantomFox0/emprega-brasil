@@ -6,7 +6,7 @@ const env = require('../config/env');
 // Diretório "fotos" na raiz do backend (backend/ms-profile/fotos)
 const FOTOS_DIR = path.resolve(__dirname, '..', '..', 'fotos');
 
-fs.mkdirSync(FOTOS_DIR, { recursive: true });
+try { fs.mkdirSync(FOTOS_DIR, { recursive: true }); } catch (_) { /* FS somente leitura (ex.: Vercel) */ }
 
 const ALLOWED_MIME_TYPES = new Set([
   'image/jpeg',
